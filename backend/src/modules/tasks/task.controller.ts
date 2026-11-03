@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { getAllTasks, createTask, updateTask } from "./task.service";
+import { getAllTasks, createTask, updateTask, deleteTask } from "./task.service";
 
 export const getTasksController = async (req: Request, res: Response) => {
   try {
@@ -123,3 +123,33 @@ export const updateTaskController = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+export const deleteTaskController = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params;
+
+        if( !id) {
+            res.status(400).json({
+                success: false,
+                message: "Task ID is required"
+            })
+            return;
+        }
+
+        await deleteTask(id);
+
+        res.status(200).json({
+            success: true,
+            message: "Task deleted Successfully"
+        })
+
+    } catch (error) {
+        console.error("Failed to delete Task", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete Task"
+        })
+    }
+}

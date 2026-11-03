@@ -33,3 +33,10 @@ export const updateTask = async (
     data,
   });
 };
+
+
+export const deleteTask = async (id: string) => {
+    return prisma.task.delete({
+        where: {id}
+    })
+} 
