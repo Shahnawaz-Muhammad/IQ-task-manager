@@ -1,6 +1,6 @@
 import type { Task } from "../types/task";
 
-const API_URL = "http://localhost:3000/api/tasks";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface ApiResponse<T> {
   success: boolean;
@@ -14,7 +14,7 @@ export interface CreateTaskInput {
 
 
 export const getTasks = async (): Promise<Task[]> => {
-  const response = await fetch(API_URL);
+  const response = await fetch(`${API_URL}/api/tasks`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch tasks");
@@ -28,7 +28,7 @@ export const getTasks = async (): Promise<Task[]> => {
 export const createTask = async (
   task: CreateTaskInput
 ): Promise<Task> => {
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${API_URL}/api/tasks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const updateTask = async (
   id: string,
   completed: boolean
 ): Promise<Task> => {
-  const response = await fetch(`${API_URL}/${id}`, {
+  const response = await fetch(`${API_URL}/api/tasks/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export const updateTask = async (
 };
 
 export const deleteTask = async (id: string): Promise<void> => {
-  const response = await fetch(`${API_URL}/${id}`, {
+  const response = await fetch(`${API_URL}/api/tasks/${id}`, {
     method: "DELETE",
   });
 
