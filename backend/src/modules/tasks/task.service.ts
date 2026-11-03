@@ -1,4 +1,4 @@
-import {prisma} from "../../config/prisma";
+import {prisma} from "../../config/prisma.js";
 
 export const getAllTasks = async () => {
     return prisma.task.findMany({
@@ -15,7 +15,9 @@ export const createTask = async (data: {
   return prisma.task.create({
     data: {
       title: data.title,
-      description: data.description,
+       ...(data.description !== undefined && {
+        description: data.description,
+      }),
     },
   });
 };
@@ -36,7 +38,15 @@ export const updateTask = async (
 
 
 export const deleteTask = async (id: string) => {
+    const task = await prisma.task.findUnique({
+        where: { id }
+    });
+
+    if (!task) {
+        return null;
+    }
+
     return prisma.task.delete({
-        where: {id}
-    })
-} 
+        where: { id }
+    });
+};

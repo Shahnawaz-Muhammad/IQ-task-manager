@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
+  "keywords": [],
  "scripts": {
   "dev": "tsx watch src/server.ts",
-  "build": "tsc",
+"build": "tsc -p tsconfig.json",
   "start": "node dist/server.js"
 },
-  "keywords": [],
-  "type": "commonjs",
   "dependencies": {
     "@prisma/client": "^6.19.3",
     "cors": "^2.8.6",

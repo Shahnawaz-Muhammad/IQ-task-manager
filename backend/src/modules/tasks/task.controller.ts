@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { getAllTasks, createTask, updateTask, deleteTask } from "./task.service";
+import { getAllTasks, createTask, updateTask, deleteTask } from "./task.service.js";
 
 export const getTasksController = async (req: Request, res: Response) => {
   try {
@@ -19,7 +19,7 @@ export const getTasksController = async (req: Request, res: Response) => {
   }
 };
 
-export const createTaskController = async (req: Requrest, res: Response) => {
+export const createTaskController = async (req: Request, res: Response) => {
   try {
     const { title, description } = req.body;
 
@@ -62,11 +62,11 @@ export const createTaskController = async (req: Requrest, res: Response) => {
 
 export const updateTaskController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
 
     const { title, description, completed } = req.body;
 
-    if (!id) {
+    if (typeof id !== "string" || id.trim().length === 0) {
       res.status(400).json({
         success: false,
         message: "Task id is required",
@@ -127,9 +127,9 @@ export const updateTaskController = async (req: Request, res: Response) => {
 
 export const deleteTaskController = async (req: Request, res: Response) => {
     try {
-        const {id} = req.params;
+        const id= req.params.id;
 
-        if( !id) {
+        if( typeof id !== "string" || id.trim().length === 0) {
             res.status(400).json({
                 success: false,
                 message: "Task ID is required"
@@ -137,7 +137,15 @@ export const deleteTaskController = async (req: Request, res: Response) => {
             return;
         }
 
-        await deleteTask(id);
+        const deletedTask = await deleteTask(id);
+
+        if (!deletedTask) {
+            res.status(404).json({
+                success: false,
+                message: "Task not found"
+            });
+            return;
+        }
 
         res.status(200).json({
             success: true,
