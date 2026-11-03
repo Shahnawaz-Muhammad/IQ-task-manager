@@ -19,3 +19,17 @@ export const createTask = async (data: {
     },
   });
 };
+
+export const updateTask = async (
+  id: string,
+  data: {
+    title?: string;
+    description?: string | null;
+    completed?: boolean;
+  },
+) => {
+  return prisma.task.update({
+    where: { id },
+    data,
+  });
+};
