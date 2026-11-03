@@ -9,11 +9,17 @@ import AddTaskModal from "./components/AddTaskModal";
 import { getTasks, createTask, updateTask, deleteTask } from "./api/taskApi";
 import type { Task } from "./types/task";
 
+import { getWeather } from "./api/weatherApi";
+import type { Weather } from "./api/weatherApi";
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [weather, setWeather] = useState<Weather | null>(null);
+  const [weatherError, setWeatherError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -66,6 +72,20 @@ function App() {
       setError(err instanceof Error ? err.message : "Could not delete task");
     }
   };
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        setWeather(await getWeather("Rawalpindi"));
+      } catch (err) {
+        setWeatherError(
+          err instanceof Error ? err.message : "Could not load weather",
+        );
+      }
+    };
+
+    fetchWeather();
+  }, []);
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-full">
@@ -89,6 +109,29 @@ function App() {
                 Add Task
               </button>
             </div>
+
+            <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h3 className="font-semibold">Weather in Rawalpindi</h3>
+
+              {weather && (
+                <p className="mt-2 text-sm text-slate-600">
+                  {weather.temperature}°C · {weather.description} · Humidity{" "}
+                  {weather.humidity}%
+                </p>
+              )}
+
+              {weatherError && (
+                <p role="alert" className="mt-2 text-sm text-red-700">
+                  {weatherError}
+                </p>
+              )}
+
+              {!weather && !weatherError && (
+                <p className="mt-2 text-sm text-slate-500">
+                  Loading weather...
+                </p>
+              )}
+            </section>
 
             {loading && (
               <p className="mt-6 text-sm text-slate-500">Loading tasks...</p>

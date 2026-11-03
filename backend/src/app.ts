@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import taskRoutes from "./modules/tasks/task.routes.js"
+import weatherRoutes from "./modules/weather/weather.routes.js";
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.get("/health", (_req, res) => {
 })
 
 app.use("/api/tasks", taskRoutes);
-
+app.use("/api/weather", weatherRoutes);
 
 
 export default app;
